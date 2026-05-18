@@ -1,0 +1,68 @@
+const comments = [
+  {
+    id: "c1",
+    taskId: "t1",
+    userId: "u2",
+    content: "Great work on the mockups! Please make sure the hero section includes the new branding colors.",
+    createdAt: "2025-03-05T10:30:00.000Z",
+    updatedAt: "2025-03-05T10:30:00.000Z",
+  },
+  {
+    id: "c2",
+    taskId: "t1",
+    userId: "u4",
+    content: "I've updated the colors to match the new brand guidelines. Ready for review.",
+    createdAt: "2025-03-10T14:00:00.000Z",
+    updatedAt: "2025-03-10T14:00:00.000Z",
+  },
+  {
+    id: "c3",
+    taskId: "t2",
+    userId: "u2",
+    content: "Please make sure the navbar is accessible and works with keyboard navigation.",
+    createdAt: "2025-03-12T09:00:00.000Z",
+    updatedAt: "2025-03-12T09:00:00.000Z",
+  },
+  {
+    id: "c4",
+    taskId: "t4",
+    userId: "u2",
+    content: "Remember to add social login options (Google, Apple) as discussed in the sprint planning.",
+    createdAt: "2025-04-02T11:00:00.000Z",
+    updatedAt: "2025-04-02T11:00:00.000Z",
+  },
+  {
+    id: "c5",
+    taskId: "t4",
+    userId: "u3",
+    content: "Social login buttons are implemented. Currently testing the OAuth flow.",
+    createdAt: "2025-04-08T16:30:00.000Z",
+    updatedAt: "2025-04-08T16:30:00.000Z",
+  },
+  {
+    id: "c6",
+    taskId: "t8",
+    userId: "u3",
+    content: "Charts are done. Used Recharts for line and bar charts. Ready for QA.",
+    createdAt: "2025-03-01T13:00:00.000Z",
+    updatedAt: "2025-03-01T13:00:00.000Z",
+  },
+  {
+    id: "c7",
+    taskId: "t11",
+    userId: "u3",
+    content: "Vulnerability scan complete. Found 3 critical issues that need immediate attention.",
+    createdAt: "2025-01-25T10:00:00.000Z",
+    updatedAt: "2025-01-25T10:00:00.000Z",
+  },
+  {
+    id: "c8",
+    taskId: "t11",
+    userId: "u1",
+    content: "Please create tickets for each critical issue and assign them to the security team.",
+    createdAt: "2025-01-26T08:00:00.000Z",
+    updatedAt: "2025-01-26T08:00:00.000Z",
+  },
+];
+
+export default comments;
