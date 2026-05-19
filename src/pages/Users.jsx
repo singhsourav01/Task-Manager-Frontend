@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import mockUsersService from "../services/mockUsersService";
+import usersService from "../services/usersService";
 import { canManageUsers } from "../utils/permissions";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
@@ -35,7 +35,7 @@ export default function Users() {
   const loadUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
-    const result = await mockUsersService.getUsers({ page, search, role: roleFilter, status: statusFilter });
+    const result = await usersService.getUsers({ page, search, role: roleFilter, status: statusFilter });
     if (result.success) {
       setUsersList(result.data);
       setPagination(result.pagination);
@@ -50,7 +50,7 @@ export default function Users() {
   }, [loadUsers]);
 
   const handleToggleActive = async (id) => {
-    const result = await mockUsersService.toggleUserActive(id);
+    const result = await usersService.toggleUserActive(id);
     if (result.success) {
       loadUsers();
     }
@@ -58,7 +58,7 @@ export default function Users() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
-    const result = await mockUsersService.deleteUser(id);
+    const result = await usersService.deleteUser(id);
     if (result.success) {
       loadUsers();
     }

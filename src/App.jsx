@@ -6,6 +6,7 @@ import MainLayout from "./components/layout/MainLayout";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import RoleGuard from "./components/common/RoleGuard";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
 import UserForm from "./pages/UserForm";
@@ -46,6 +47,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/access-denied" element={<AccessDenied />} />
+        <Route path="/register" element={<Register />} />
 
         <Route
           element={

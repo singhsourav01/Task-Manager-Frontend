@@ -8,9 +8,9 @@ import {
   canAssignProjectMembers,
   canCreateTask,
 } from "../utils/permissions";
-import mockProjectsService from "../services/mockProjectsService";
-import mockTasksService from "../services/mockTasksService";
-import mockUsersService from "../services/mockUsersService";
+import projectsService from "../services/projectsService";
+import tasksService from "../services/tasksService";
+import usersService from "../services/usersService";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
 
@@ -50,7 +50,7 @@ export default function ProjectDetail() {
     setLoading(true);
     setError(null);
 
-    const projectResult = await mockProjectsService.getProjectById(id);
+    const projectResult = await projectsService.getProjectById(id);
     if (!projectResult.success) {
       setError(projectResult.message);
       setLoading(false);
@@ -58,10 +58,10 @@ export default function ProjectDetail() {
     }
     setProject(projectResult.data);
 
-    const tasksResult = await mockTasksService.getTasksByProject(id);
+    const tasksResult = await tasksService.getTasksByProject(id);
     if (tasksResult.success) setTasks(tasksResult.data);
 
-    const usersResult = await mockUsersService.getUsers({ limit: 100 });
+    const usersResult = await usersService.getUsers({ limit: 100 });
     if (usersResult.success) {
       setAllUsers(usersResult.data);
       const projectMembers = usersResult.data.filter((u) =>
@@ -75,7 +75,7 @@ export default function ProjectDetail() {
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
-    const result = await mockProjectsService.deleteProject(id);
+    const result = await projectsService.deleteProject(id);
     if (result.success) {
       navigate("/projects");
     }
@@ -83,7 +83,7 @@ export default function ProjectDetail() {
 
   const handleAssignMembers = async () => {
     if (selectedMembers.length === 0) return;
-    const result = await mockProjectsService.assignMembers(id, selectedMembers);
+    const result = await projectsService.assignMembers(id, selectedMembers);
     if (result.success) {
       setShowMemberSelect(false);
       setSelectedMembers([]);
@@ -92,7 +92,7 @@ export default function ProjectDetail() {
   };
 
   const handleRemoveMember = async (userId) => {
-    const result = await mockProjectsService.removeMember(id, userId);
+    const result = await projectsService.removeMember(id, userId);
     if (result.success) loadData();
   };
 

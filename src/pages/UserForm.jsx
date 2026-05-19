@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userSchema } from "../utils/validation";
 import { canManageUsers } from "../utils/permissions";
-import mockUsersService from "../services/mockUsersService";
+import usersService from "../services/usersService";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
 
@@ -48,7 +48,7 @@ export default function UserForm() {
 
   const loadUser = async () => {
     setLoading(true);
-    const result = await mockUsersService.getUserById(id);
+    const result = await usersService.getUserById(id);
     if (result.success) {
       reset({
         name: result.data.name,
@@ -73,8 +73,8 @@ export default function UserForm() {
     }
 
     const result = isEdit
-      ? await mockUsersService.updateUser(id, payload)
-      : await mockUsersService.createUser(payload);
+      ? await usersService.updateUser(id, payload)
+      : await usersService.createUser(payload);
 
     if (result.success) {
       navigate("/users");

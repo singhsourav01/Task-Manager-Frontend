@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { taskSchema } from "../utils/validation";
 import { canCreateTask, canEditTask } from "../utils/permissions";
-import mockTasksService from "../services/mockTasksService";
-import mockProjectsService from "../services/mockProjectsService";
-import mockUsersService from "../services/mockUsersService";
+import tasksService from "../services/tasksService";
+import projectsService from "../services/projectsService";
+import usersService from "../services/usersService";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
 
@@ -51,8 +51,8 @@ export default function TaskForm() {
 
   const loadFormData = async () => {
     const [projectsResult, usersResult] = await Promise.all([
-      mockProjectsService.getProjects({ limit: 100 }),
-      mockUsersService.getUsers({ limit: 100 }),
+      projectsService.getProjects({ limit: 100 }),
+      usersService.getUsers({ limit: 100 }),
     ]);
 
     if (projectsResult.success) {
@@ -70,7 +70,7 @@ export default function TaskForm() {
     }
 
     if (isEdit) {
-      const taskResult = await mockTasksService.getTaskById(id);
+      const taskResult = await tasksService.getTaskById(id);
       if (taskResult.success) {
         if (!canEditTask(user, taskResult.data)) {
           navigate("/access-denied", { replace: true });
@@ -98,7 +98,7 @@ export default function TaskForm() {
   useEffect(() => {
     const loadProjectMembers = async () => {
       if (watchedProjectId) {
-        const result = await mockProjectsService.getProjectById(watchedProjectId);
+        const result = await projectsService.getProjectById(watchedProjectId);
         if (result.success) setSelectedProject(result.data);
       }
     };
@@ -106,7 +106,7 @@ export default function TaskForm() {
   }, [watchedProjectId]);
 
   const onSubmit = async (data) => {
-    const project = await mockProjectsService.getProjectById(data.projectId);
+    const project = await projectsService.getProjectById(data.projectId);
     if (!project.success) {
       setError("Selected project not found");
       return;
@@ -128,8 +128,8 @@ export default function TaskForm() {
     };
 
     const result = isEdit
-      ? await mockTasksService.updateTask(id, payload)
-      : await mockTasksService.createTask(payload);
+      ? await tasksService.updateTask(id, payload)
+      : await tasksService.createTask(payload);
 
     if (result.success) {
       navigate("/tasks");

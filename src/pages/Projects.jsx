@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import mockProjectsService from "../services/mockProjectsService";
+import projectsService from "../services/projectsService";
 import { canCreateProject, canViewAllProjects } from "../utils/permissions";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
@@ -36,7 +36,7 @@ export default function Projects() {
     if (!canViewAll) {
       params.userId = user.id;
     }
-    const result = await mockProjectsService.getProjects(params);
+    const result = await projectsService.getProjects(params);
     if (result.success) {
       setProjectsList(result.data);
       setPagination(result.pagination);
@@ -52,7 +52,7 @@ export default function Projects() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
-    const result = await mockProjectsService.deleteProject(id);
+    const result = await projectsService.deleteProject(id);
     if (result.success) {
       loadProjects();
     }

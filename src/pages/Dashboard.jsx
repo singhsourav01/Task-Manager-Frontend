@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
-import mockDashboardService from "../services/mockDashboardService";
+import dashboardService from "../services/dashboardService";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
 
@@ -31,7 +31,7 @@ export default function Dashboard() {
   const loadStats = async () => {
     setLoading(true);
     setError(null);
-    const result = await mockDashboardService.getStats();
+    const result = await dashboardService.getStats();
     if (result.success) {
       setStats(result.data);
     } else {

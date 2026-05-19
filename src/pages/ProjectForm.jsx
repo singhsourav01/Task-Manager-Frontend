@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { projectSchema } from "../utils/validation";
 import { canCreateProject, canEditProject } from "../utils/permissions";
-import mockProjectsService from "../services/mockProjectsService";
-import mockUsersService from "../services/mockUsersService";
+import projectsService from "../services/projectsService";
+import usersService from "../services/usersService";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
 
@@ -52,7 +52,7 @@ export default function ProjectForm() {
   }, [id]);
 
   const loadUsers = async () => {
-    const result = await mockUsersService.getUsers({ limit: 100 });
+    const result = await usersService.getUsers({ limit: 100 });
     if (result.success) {
       setAllUsers(result.data);
     }
@@ -60,7 +60,7 @@ export default function ProjectForm() {
 
   const loadProject = async () => {
     setLoading(true);
-    const result = await mockProjectsService.getProjectById(id);
+    const result = await projectsService.getProjectById(id);
     if (result.success) {
       reset({
         name: result.data.name,
@@ -78,7 +78,7 @@ export default function ProjectForm() {
 
   const onSubmit = async (data) => {
     if (isEdit) {
-      const proj = (await mockProjectsService.getProjectById(id)).data;
+      const proj = (await projectsService.getProjectById(id)).data;
       if (!canEditProject(user, proj)) {
         setError("You don't have permission to edit this project");
         return;
@@ -96,8 +96,8 @@ export default function ProjectForm() {
     };
 
     const result = isEdit
-      ? await mockProjectsService.updateProject(id, payload)
-      : await mockProjectsService.createProject(payload);
+      ? await projectsService.updateProject(id, payload)
+      : await projectsService.createProject(payload);
 
     if (result.success) {
       navigate("/projects");

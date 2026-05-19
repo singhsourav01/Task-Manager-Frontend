@@ -1,24 +1,35 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import mockAuthService from "../services/mockAuthService";
+import authService from "../services/authService";
 
 export const login = createAsyncThunk("auth/login", async ({ email, password }, { rejectWithValue }) => {
-  const result = await mockAuthService.login(email, password);
+  const result = await authService.login(email, password);
   if (!result.success) {
     return rejectWithValue(result.message);
   }
   return result.data;
 });
 
+export const register = createAsyncThunk(
+  "auth/register",
+  async ({ name, email, password }, { rejectWithValue }) => {
+    const result = await authService.register({ name, email, password });
+    if (!result.success) {
+      return rejectWithValue(result.message);
+    }
+    return result.data;
+  },
+);
+
 export const logout = createAsyncThunk("auth/logout", async () => {
-  await mockAuthService.logout();
+  await authService.logout();
 });
 
 export const checkSession = createAsyncThunk("auth/checkSession", async (_, { rejectWithValue }) => {
-  const result = await mockAuthService.getCurrentUser();
+  const result = await authService.getCurrentUser();
   if (!result.success) {
     return rejectWithValue(result.message);
   }
-  return result.data;
+  return { user: result.data, token: authService.getStoredToken() };
 });
 
 const initialState = {
@@ -53,6 +64,20 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Login failed";
       })
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Registration failed";
+      })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.token = null;
@@ -66,7 +91,8 @@ const authSlice = createSlice({
       .addCase(checkSession.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
       })
       .addCase(checkSession.rejected, (state) => {
         state.loading = false;

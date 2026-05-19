@@ -10,10 +10,10 @@ import {
   canCommentOnTask,
   canViewTask,
 } from "../utils/permissions";
-import mockTasksService from "../services/mockTasksService";
-import mockCommentsService from "../services/mockCommentsService";
-import mockProjectsService from "../services/mockProjectsService";
-import mockUsersService from "../services/mockUsersService";
+import tasksService from "../services/tasksService";
+import commentsService from "../services/commentsService";
+import projectsService from "../services/projectsService";
+import usersService from "../services/usersService";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
 
@@ -59,7 +59,7 @@ export default function TaskDetail() {
     setLoading(true);
     setError(null);
 
-    const taskResult = await mockTasksService.getTaskById(id);
+    const taskResult = await tasksService.getTaskById(id);
     if (!taskResult.success) {
       setError(taskResult.message);
       setLoading(false);
@@ -74,15 +74,15 @@ export default function TaskDetail() {
     setTask(taskResult.data);
 
     const [projResult, commentsResult] = await Promise.all([
-      mockProjectsService.getProjectById(taskResult.data.projectId),
-      mockCommentsService.getCommentsByTask(id),
+      projectsService.getProjectById(taskResult.data.projectId),
+      commentsService.getCommentsByTask(id),
     ]);
 
     if (projResult.success) setProject(projResult.data);
     if (commentsResult.success) setComments(commentsResult.data);
 
     if (taskResult.data.assignedTo) {
-      const userResult = await mockUsersService.getUserById(taskResult.data.assignedTo);
+      const userResult = await usersService.getUserById(taskResult.data.assignedTo);
       if (userResult.success) setAssignedUser(userResult.data);
     }
 
@@ -90,14 +90,14 @@ export default function TaskDetail() {
   };
 
   const handleStatusChange = async (newStatus) => {
-    const result = await mockTasksService.updateTaskStatus(id, newStatus);
+    const result = await tasksService.updateTaskStatus(id, newStatus);
     if (result.success) {
       setTask(result.data);
     }
   };
 
   const onAddComment = async (data) => {
-    const result = await mockCommentsService.addComment(id, user.id, data.content);
+    const result = await commentsService.addComment(id, user.id, data.content);
     if (result.success) {
       setComments([...comments, result.data]);
       reset();
@@ -106,7 +106,7 @@ export default function TaskDetail() {
 
   const handleDeleteComment = async (commentId) => {
     if (!window.confirm("Delete this comment?")) return;
-    await mockCommentsService.deleteComment(commentId, user.id);
+    await commentsService.deleteComment(commentId, user.id);
     setComments(comments.filter((c) => c.id !== commentId));
   };
 

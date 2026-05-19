@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { login, clearError } from "../store/authSlice";
@@ -105,10 +105,17 @@ export default function Login() {
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
+
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Don&apos;t have an account?{" "}
+            <Link to="/register" className="text-indigo-600 hover:text-indigo-800 font-medium">
+              Register
+            </Link>
+          </p>
         </div>
 
         <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Quick Login (Demo)</p>
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Quick Login (register first if DB is empty)</p>
           <div className="space-y-2">
             <button
               onClick={() => quickLogin("admin@example.com", "Admin@123")}

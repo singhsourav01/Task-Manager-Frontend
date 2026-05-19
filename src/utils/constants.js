@@ -37,8 +37,11 @@ export const PAGINATION = {
 
 export const STORAGE_KEYS = {
   TOKEN: "taskmanager_token",
+  REFRESH_TOKEN: "taskmanager_refresh_token",
   USER: "taskmanager_user",
 };
+
+export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/auth";
 
 export const MOCK_DELAYS = {
   SHORT: 300,

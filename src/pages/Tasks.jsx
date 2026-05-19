@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import mockTasksService from "../services/mockTasksService";
-import mockProjectsService from "../services/mockProjectsService";
+import tasksService from "../services/tasksService";
+import projectsService from "../services/projectsService";
 import { canViewAllTasks } from "../utils/permissions";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
@@ -45,9 +45,9 @@ export default function Tasks() {
     setError(null);
     const params = { page, search, status: statusFilter, priority: priorityFilter, projectId: projectFilter };
     if (!canViewAll) {
-      params.assignedTo = user.id;
+      params.userId = user.id;
     }
-    const result = await mockTasksService.getTasks(params);
+    const result = await tasksService.getTasks(params);
     if (result.success) {
       setTasksList(result.data);
       setPagination(result.pagination);
@@ -63,7 +63,7 @@ export default function Tasks() {
 
   useEffect(() => {
     const loadProjects = async () => {
-      const result = await mockProjectsService.getProjects({ limit: 100 });
+      const result = await projectsService.getProjects({ limit: 100 });
       if (result.success) {
         const map = {};
         result.data.forEach((p) => { map[p.id] = p; });
@@ -75,7 +75,7 @@ export default function Tasks() {
   }, []);
 
   const handleStatusChange = async (taskId, newStatus) => {
-    const result = await mockTasksService.updateTaskStatus(taskId, newStatus);
+    const result = await tasksService.updateTaskStatus(taskId, newStatus);
     if (result.success) {
       loadTasks();
     }
