@@ -52,7 +52,7 @@ export default function ProjectForm() {
   }, [id]);
 
   const loadUsers = async () => {
-    const result = await usersService.getUsers({ limit: 100 });
+    const result = await usersService.getActiveUsers({ limit: 100 });
     if (result.success) {
       setAllUsers(result.data);
     }
@@ -112,7 +112,9 @@ export default function ProjectForm() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{isEdit ? "Edit Project" : "New Project"}</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {isEdit ? "Edit Project" : "New Project"}
+        </h1>
         <p className="text-gray-500 text-sm mt-1">
           {isEdit ? "Update project details" : "Create a new project"}
         </p>
@@ -123,27 +125,39 @@ export default function ProjectForm() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Project Name
+            </label>
             <input
               type="text"
               {...register("name")}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
             />
-            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
             <textarea
               rows={3}
               {...register("description")}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
             />
-            {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.description.message}
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
             <select
               {...register("status")}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -157,33 +171,50 @@ export default function ProjectForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Start Date
+              </label>
               <input
                 type="date"
                 {...register("startDate")}
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none min-h-[44px]"
               />
-              {errors.startDate && <p className="text-red-500 text-xs mt-1">{errors.startDate.message}</p>}
+              {errors.startDate && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.startDate.message}
+                </p>
+              )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                End Date
+              </label>
               <input
                 type="date"
                 {...register("endDate")}
                 className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none min-h-[44px]"
               />
-              {errors.endDate && <p className="text-red-500 text-xs mt-1">{errors.endDate.message}</p>}
+              {errors.endDate && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.endDate.message}
+                </p>
+              )}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Team Members</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Team Members
+            </label>
             <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-2 space-y-1">
               {allUsers.map((u) => {
                 const members = watch("members") || [];
                 const checked = members.includes(u.id);
                 return (
-                  <label key={u.id} className="flex items-center gap-2 px-2 py-1 hover:bg-gray-50 rounded cursor-pointer">
+                  <label
+                    key={u.id}
+                    className="flex items-center gap-2 px-2 py-1 hover:bg-gray-50 rounded cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       value={u.id}
@@ -205,7 +236,11 @@ export default function ProjectForm() {
               disabled={submitting}
               className="px-4 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition-colors min-h-[44px]"
             >
-              {submitting ? "Saving..." : isEdit ? "Update Project" : "Create Project"}
+              {submitting
+                ? "Saving..."
+                : isEdit
+                  ? "Update Project"
+                  : "Create Project"}
             </button>
             <button
               type="button"

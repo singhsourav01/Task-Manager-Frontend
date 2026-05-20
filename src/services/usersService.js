@@ -1,5 +1,9 @@
 import { apiRequest } from "../api/client";
-import { successResponse, errorResponse, paginationMeta } from "../utils/responseHelper";
+import {
+  successResponse,
+  errorResponse,
+  paginationMeta,
+} from "../utils/responseHelper";
 import { PAGINATION } from "../utils/constants";
 import { mapUser, toApiRole } from "../utils/mappers";
 
@@ -19,7 +23,8 @@ const usersService = {
     if (search) {
       const s = search.toLowerCase();
       users = users.filter(
-        (u) => u.name.toLowerCase().includes(s) || u.email.toLowerCase().includes(s),
+        (u) =>
+          u.name.toLowerCase().includes(s) || u.email.toLowerCase().includes(s),
       );
     }
     if (role) {
@@ -31,7 +36,8 @@ const usersService = {
       users = users.filter((u) => !u.isActive);
     }
 
-    const pagination = data.pagination || paginationMeta(page, limit, users.length);
+    const pagination =
+      data.pagination || paginationMeta(page, limit, users.length);
 
     return successResponse(users, "Users fetched successfully", {
       page: pagination.page ?? page,
@@ -40,7 +46,46 @@ const usersService = {
       totalPages: pagination.totalPages ?? 1,
     });
   },
+  async getActiveUsers({
+    page = PAGINATION.DEFAULT_PAGE,
+    limit = PAGINATION.DEFAULT_LIMIT,
+    search = "",
+    role = "",
+    status = "",
+  } = {}) {
+    const { ok, data } = await apiRequest(
+      `/active-users?page=${page}&limit=${limit}`,
+    );
+    if (!ok) return errorResponse(data.message || "Failed to fetch users");
 
+    let users = (data.data || []).map(mapUser);
+
+    if (search) {
+      const s = search.toLowerCase();
+      users = users.filter(
+        (u) =>
+          u.name.toLowerCase().includes(s) || u.email.toLowerCase().includes(s),
+      );
+    }
+    if (role) {
+      users = users.filter((u) => u.role === role);
+    }
+    if (status === "active") {
+      users = users.filter((u) => u.isActive);
+    } else if (status === "inactive") {
+      users = users.filter((u) => !u.isActive);
+    }
+
+    const pagination =
+      data.pagination || paginationMeta(page, limit, users.length);
+
+    return successResponse(users, "Users fetched successfully", {
+      page: pagination.page ?? page,
+      limit: pagination.limit ?? limit,
+      total: pagination.total ?? users.length,
+      totalPages: pagination.totalPages ?? 1,
+    });
+  },
   async getUserById(id) {
     const { ok, data } = await apiRequest(`/user/${id}`);
     if (!ok) return errorResponse(data.message || "User not found", 404);
@@ -58,7 +103,10 @@ const usersService = {
       },
     });
     if (!ok) return errorResponse(data.message || "Failed to create user");
-    return successResponse(mapUser(data.data), data.message || "User created successfully");
+    return successResponse(
+      mapUser(data.data),
+      data.message || "User created successfully",
+    );
   },
 
   async updateUser(id, userData) {
@@ -78,7 +126,9 @@ const usersService = {
         body: { isActive: userData.isActive },
       });
       if (!statusRes.ok) {
-        return errorResponse(statusRes.data.message || "Failed to update status");
+        return errorResponse(
+          statusRes.data.message || "Failed to update status",
+        );
       }
     }
 
@@ -103,10 +153,13 @@ const usersService = {
       method: "PUT",
       body: { isActive: !current.data.isActive },
     });
-    if (!ok) return errorResponse(data.message || "Failed to toggle user status");
+    if (!ok)
+      return errorResponse(data.message || "Failed to toggle user status");
     return successResponse(
       mapUser(data.data),
-      current.data.isActive ? "User deactivated successfully" : "User activated successfully",
+      current.data.isActive
+        ? "User deactivated successfully"
+        : "User activated successfully",
     );
   },
 
